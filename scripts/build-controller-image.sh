@@ -89,11 +89,14 @@ if ! is_public_ecr_logged_in; then
   aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 fi
 
-pushd "$TEST_INFRA_DIR" 1>/dev/null
-  # Get the golang version from build_config.yaml
-  GOLANG_VERSION=$(cat build_config.yaml | yq .go_version)
-  BASE_IMAGE_VERSION=$(cat build_config.yaml | yq .eks_distro_version) 
-popd 1>/dev/null
+#pushd "$TEST_INFRA_DIR" 1>/dev/null
+#  # Get the golang version from build_config.yaml
+#  GOLANG_VERSION=$(cat build_config.yaml | yq .go_version)
+#  BASE_IMAGE_VERSION=$(cat build_config.yaml | yq .eks_distro_version)
+#popd 1>/dev/null
+
+GOLANG_VERSION=1.23
+BASE_IMAGE_VERSION=latest
 
 # if local build
 # then use Dockerfile which allows references to local modules from service controller
@@ -101,6 +104,8 @@ DOCKER_BUILD_CONTEXT="$ACK_DIR"
 if [[ "$LOCAL_MODULES" = "true" ]]; then
   DOCKERFILE="${ROOT_DIR}"/Dockerfile.local
 fi
+
+echo "MJF: $DOCKERFILE"
 
 if ! docker build \
   --quiet="${QUIET}" \

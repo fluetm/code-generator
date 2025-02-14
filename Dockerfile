@@ -1,5 +1,7 @@
+# MJF: Use an image that has more tooling in it
 # Base image to use at runtime
-ARG base_image=public.ecr.aws/eks-distro-build-tooling/eks-distro-minimal-base-nonroot
+#ARG base_image=public.ecr.aws/eks-distro-build-tooling/eks-distro-minimal-base-nonroot
+ARG base_image=public.ecr.aws/eks-distro-build-tooling/eks-distro-base
 
 # Golang image to use for compiling the manager
 ARG builder_image=public.ecr.aws/docker/library/golang
@@ -61,6 +63,7 @@ LABEL org.opencontainers.image.source=https://github.com/aws-controllers-k8s/$se
 LABEL org.opencontainers.image.version=$service_controller_git_version
 WORKDIR /
 COPY --from=builder $work_dir/bin/controller $work_dir/LICENSE $work_dir/ATTRIBUTION.md /bin/
+
 # Make this image non-root by default
 USER 1000
 ENTRYPOINT ["/bin/controller"]
